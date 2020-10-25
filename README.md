@@ -1,2 +1,2 @@
 # HueController
-a .Net API for controlling Phillips Hue
+a .Net API for controlling Philips Hue
