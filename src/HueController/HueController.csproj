@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>PReardon.HueController</AssemblyName>
+    <RootNamespace>PReardon.HueController</RootNamespace>
+    <Authors>Paul Reardon</Authors>
+    <Company>Reardon Tech</Company>
+    <Version>0.1.0</Version>
+    <RepositoryUrl>https://github.com/preardon/HueController</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.9" />
+    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+  </ItemGroup>
+
+</Project>
