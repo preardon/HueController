@@ -4,25 +4,23 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace PReardon.HueController.Lights
 {
-    public class Lights
+    public class LightsAPI
     {
         private readonly HttpClient _httpClient;
         private readonly string _userName;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public Lights(HttpClient httpClient, string username)
+        public LightsAPI(HttpClient httpClient, string username, JsonSerializerOptions jso)
         {
             _httpClient = httpClient;
             _userName = username;
 
-            _jsonSerializerOptions = new JsonSerializerOptions();
-            _jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            _jsonSerializerOptions = jso;
         }
 
         public async Task<Dictionary<string, Light>> GetAllLightsAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -33,6 +31,18 @@ namespace PReardon.HueController.Lights
             {
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<Dictionary<string, Light>>(content, _jsonSerializerOptions);
+            }
+
+            return null;
+        }
+        public static async Task<Dictionary<string, Light>> GetAllLightsAsync(HttpClient client, JsonSerializerOptions jso, string userName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var response = await client.GetAsync($"/api/{userName}/lights", cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<Dictionary<string, Light>>(content, jso);
             }
 
             return null;

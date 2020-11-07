@@ -1,28 +1,24 @@
 ﻿using PReardon.HueController.Groups.Model;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace PReardon.HueController.Groups
 {
-    public class Groups
+    public class GroupsAPI
     {
         private readonly HttpClient _httpClient;
         private readonly string _userName;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public Groups(HttpClient httpClient, string username)
+        public GroupsAPI(HttpClient httpClient, string username, JsonSerializerOptions jso)
         {
             _httpClient = httpClient;
             _userName = username;
-
-            _jsonSerializerOptions = new JsonSerializerOptions();
-            _jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            _jsonSerializerOptions = jso;
         }
 
         /// <summary>
@@ -48,19 +44,38 @@ namespace PReardon.HueController.Groups
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task CreateGroupAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<CreateGroupResponseItem> CreateGroupAsync(GroupBase group, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            var json = JsonSerializer.Serialize(group, _jsonSerializerOptions);
+            var requestContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"/api/{_userName}/groups", requestContent, cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<CreateGroupResponseItem>(content, _jsonSerializerOptions);
+            }
+
+            return null;
         }
 
         /// <summary>
         /// Gets the group attributes, e.g. name, light membership and last command for a given group.
         /// </summary>
+        /// <param name="groupId">Id of Group</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task GetGroupAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<GetGroupResponse> GetGroupAsync(string groupId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.GetAsync($"/api/{_userName}/groups/{groupId}", cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<GetGroupResponse>(content, _jsonSerializerOptions);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -69,9 +84,19 @@ namespace PReardon.HueController.Groups
         /// <param name="id">Id of the group to Update</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task UpdateGroupAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<GenericSuccessResponseItem>> UpdateGroupAsync(string id,GroupBase request, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
+            var requestContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"/api/{_userName}/groups/{id}", requestContent, cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<GenericSuccessResponseItem>>(content, _jsonSerializerOptions);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -83,7 +108,8 @@ namespace PReardon.HueController.Groups
         /// <returns>Success</returns>
         public async Task<bool> SetGroupStateAsync(string id, SetGroupStateRequest request, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var requestContent = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            var json = JsonSerializer.Serialize(request, _jsonSerializerOptions);
+            var requestContent = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync($"/api/{_userName}/groups/{id}/action", requestContent, cancellationToken);
 
             if (response.IsSuccessStatusCode)
@@ -99,9 +125,16 @@ namespace PReardon.HueController.Groups
         /// <param name="id">Id of the group to Update</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task DeleteGroupAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteGroupAsync(string id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.DeleteAsync($"/api/{_userName}/groups/{id}", cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            return false;
         }
 
     }

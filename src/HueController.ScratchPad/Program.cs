@@ -1,14 +1,10 @@
-﻿using PReardon.HueController.Discovery;
-using PReardon.HueController.Groups;
-using PReardon.HueController.Groups.Model;
-using PReardon.HueController.Lights;
-using PReardon.HueController.Lights.Model;
+﻿using PReardon.HueController.Builders;
 using System;
 using System.Linq;
-using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace HueController
+namespace HueController.ScratchPad
 {
     class Program
     {
@@ -18,23 +14,19 @@ namespace HueController
             Console.WriteLine("Hello World!");
 
 
-            var bridgeinfo = await (new NuPnPDisco()).Discover();
+            var hueController = new PReardon.HueController.HueController(_userName);
+            await hueController.Disco();
+            var lights = await hueController.Lights.GetAllLightsAsync();
 
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri($"http://{bridgeinfo[0].Internalipaddress}");
-            var lightsClient = new Lights(httpClient, _userName);
-            var lights = await lightsClient.GetAllLightsAsync();
-
-            var onLights = lights.Where(l => l.Value.State.On).Select(l => l.Key).ToList();
+            var onLights = lights.Where(l => l.Value.State.On == true).Select(l => l.Key).ToList();
 
             //foreach(var light in onLights)
             //{
             //    await lightsClient.SetStateAsync(light, new SetLightStateRequest { On = false });
             //}
 
-            var groupsClient = new Groups(httpClient, _userName);
             Console.WriteLine("Looking for Groups");
-            var groups = await groupsClient.GetAllGroupsAsync();
+            var groups = await hueController.Groups.GetAllGroupsAsync();
 
             foreach (var group in groups)
             {
@@ -43,11 +35,17 @@ namespace HueController
 
             var studyId = groups.Where(g => g.Value.Name == "Study").Select(g => g.Key).First();
 
-            await groupsClient.SetGroupStateAsync(studyId, new SetGroupStateRequest
-            {
-                On = false,
-                TransitionTime = 10
-            });
+            var builder = new GroupStateBuilder(studyId);
+            await builder.TurnOff()
+                    .WithTransitionTime(10)
+                    .SendAsync(hueController);
+
+            Thread.Sleep(1500);
+
+            await builder.TurnOn()
+                .WithBrightness(254)
+                .SendAsync(hueController);
+
         }
     }
 }

@@ -9,25 +9,25 @@ namespace PReardon.HueController.Lights.Model
         /// On/Off state of the light. On=true, Off=false
         /// </summary>
         [JsonPropertyName("on")]
-        public bool On { get; set; }
+        public bool? On { get; set; }
         /// <summary>
         /// Brightness of the light. This is a scale from the minimum brightness the light is capable of, 1, to the maximum capable brightness, 254.
         /// </summary>
         [JsonPropertyName("bri")]
         [Range(1, 254)]
-        public int Brightness { get; set; }
+        public int? Brightness { get; set; }
         /// <summary>
         /// Hue of the light. This is a wrapping value between 0 and 65535. Note, that hue/sat values are hardware dependent which means that programming two devices with the same value does not garantuee that they will be the same color. Programming 0 and 65535 would mean that the light will resemble the color red, 21845 for green and 43690 for blue.
         /// </summary>
         [JsonPropertyName("hue")]
         [Range(0, 65535)]
-        public int Hue { get; set; }
+        public int? Hue { get; set; }
         /// <summary>
         /// Saturation of the light. 254 is the most saturated (colored) and 0 is the least saturated (white).
         /// </summary>
         [JsonPropertyName("sat")]
         [Range(0, 254)]
-        public int Saturation { get; set; }
+        public int? Saturation { get; set; }
         /// <summary>
         /// The dynamic effect of the light, can either be “none” or “colorloop”.If set to colorloop, the light will cycle through all hues using the current brightness and saturation settings.
         /// </summary>
@@ -43,7 +43,7 @@ namespace PReardon.HueController.Lights.Model
         /// The Mired Color temperature of the light. 2012 connected lights are capable of 153 (6500K) to 500 (2000K).
         /// </summary>
         [JsonPropertyName("ct")]
-        public int ColorTemperature { get; set; }
+        public int? ColorTemperature { get; set; }
         /// <summary>
         /// The alert effect, which is a temporary change to the bulb’s state. This can take one of the following values:
         /// “none” – The light is not performing an alert effect.
