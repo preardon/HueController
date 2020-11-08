@@ -24,7 +24,7 @@ namespace PReardon.HueController.Builders
             _groupId = groupId;
         }
 
-        public async Task SendAsync(HueController controller)
+        public async Task SendAsync(HueAPI controller)
         {
             await controller.Groups.SetGroupStateAsync(_groupId, GroupState);
         }

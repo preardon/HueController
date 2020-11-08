@@ -1,0 +1,25 @@
+name: Publish Packages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.403
+    - name: Install dependencies
+      run: dotnet restore src/HueController/HueController.csproj
+    - name: Build
+      run: dotnet build src/HueController/HueController.csproj --configuration Release --no-restore
+    - name: Publish PReardon.HueController
+      uses: rohith/publish-nuget@v2
+      with:
+          PROJECT_FILE_PATH: src/HueController/HueController.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
