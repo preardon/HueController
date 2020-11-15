@@ -2,6 +2,7 @@
 using PReardon.HueController.Discovery;
 using PReardon.HueController.Groups;
 using PReardon.HueController.Lights;
+using PReardon.HueController.Scenes;
 using PReardon.HueController.Schedules;
 using System;
 using System.Net.Http;
@@ -20,8 +21,8 @@ namespace PReardon.HueController
         public GroupsAPI Groups { get; private set; }
         public LightsAPI Lights { get; private set; }
         public ConfigurationAPI Configuration { get; private set; }
-
         public SchedulesAPI Schedules { get; private set; }
+        public ScenesAPI Scenes { get; private set; }
 
         public HueAPI()
         {
@@ -51,6 +52,7 @@ namespace PReardon.HueController
             Groups = new GroupsAPI(_httpClient, _userName, _jsonSerializerOptions);
             Configuration = new ConfigurationAPI(_httpClient, _userName, _jsonSerializerOptions);
             Schedules = new SchedulesAPI(_httpClient, _userName, _jsonSerializerOptions);
+            Scenes = new ScenesAPI(_httpClient, _userName, _jsonSerializerOptions);
         }
 
         public async Task Disco()

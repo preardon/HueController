@@ -19,4 +19,10 @@
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Sensors\" />
+    <Folder Include="ResourceLinks\" />
+    <Folder Include="Rules\" />
+  </ItemGroup>
+
 </Project>

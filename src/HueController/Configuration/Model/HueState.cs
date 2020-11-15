@@ -1,5 +1,6 @@
 ﻿using PReardon.HueController.Groups.Model;
 using PReardon.HueController.Lights.Model;
+using PReardon.HueController.Schedules.Model;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -22,14 +23,14 @@ namespace PReardon.HueController.Configuration.Model
         /// </summary>
         [JsonPropertyName("config")]
         public BridgeConfiguration Config { get; set; }
-
-        //Todo: Fill these in
-
         /// <summary>
         /// A collection of all schedules and their attributes.
         /// </summary>
         [JsonPropertyName("schedules")]
-        public object Schedules { get; set; }
+        public Dictionary<string, Schedule> Schedules { get; set; }
+
+        //Todo: Fill these in
+
         /// <summary>
         /// A collection of all scenes and their attributes.
         /// </summary>
