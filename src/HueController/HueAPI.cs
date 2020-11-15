@@ -2,6 +2,7 @@
 using PReardon.HueController.Discovery;
 using PReardon.HueController.Groups;
 using PReardon.HueController.Lights;
+using PReardon.HueController.Schedules;
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -20,6 +21,8 @@ namespace PReardon.HueController
         public LightsAPI Lights { get; private set; }
         public ConfigurationAPI Configuration { get; private set; }
 
+        public SchedulesAPI Schedules { get; private set; }
+
         public HueAPI()
         {
             _httpClient = new HttpClient();
@@ -29,12 +32,11 @@ namespace PReardon.HueController
             _jsonSerializerOptions.IgnoreNullValues = true;
 
             Disco().Wait();
-
-            if (!String.IsNullOrWhiteSpace(_userName)) setAPIs();
         }
         public HueAPI(string userName) : this()
         {
             _userName = userName;
+            if (!String.IsNullOrWhiteSpace(_userName)) setAPIs();
         }
         
         public void SetUserName(string userName)
@@ -48,6 +50,7 @@ namespace PReardon.HueController
             Lights = new LightsAPI(_httpClient, _userName, _jsonSerializerOptions);
             Groups = new GroupsAPI(_httpClient, _userName, _jsonSerializerOptions);
             Configuration = new ConfigurationAPI(_httpClient, _userName, _jsonSerializerOptions);
+            Schedules = new SchedulesAPI(_httpClient, _userName, _jsonSerializerOptions);
         }
 
         public async Task Disco()

@@ -1,6 +1,8 @@
 # HueController
 a .Net API for controlling Philips Hue
 
+[changelog](ChangeLog.md)
+
 ## Register your Application
 
 ```cs
