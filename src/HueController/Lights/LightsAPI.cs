@@ -1,4 +1,4 @@
-﻿using PReardon.HueController.Groups.Model;
+﻿using PReardon.HueController.Model;
 using PReardon.HueController.Lights.Model;
 using System.Collections.Generic;
 using System.Net.Http;

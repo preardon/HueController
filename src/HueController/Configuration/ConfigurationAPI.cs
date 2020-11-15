@@ -1,5 +1,5 @@
 ﻿using PReardon.HueController.Configuration.Model;
-using PReardon.HueController.Groups.Model;
+using PReardon.HueController.Model;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;

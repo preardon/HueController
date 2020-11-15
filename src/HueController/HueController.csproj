@@ -6,7 +6,7 @@
     <RootNamespace>PReardon.HueController</RootNamespace>
     <Authors>Paul Reardon</Authors>
     <Company>Reardon Tech</Company>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <RepositoryUrl>https://github.com/preardon/HueController</RepositoryUrl>
     <Description>a .Net API for controlling Philips Hue</Description>
     <PackageProjectUrl>https://github.com/preardon/HueController</PackageProjectUrl>
